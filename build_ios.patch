@@ -1,0 +1,38 @@
+diff --git a/frmts/pdf/CMakeLists.txt b/frmts/pdf/CMakeLists.txt
+index 9b9a1898a7..3333344df2 100644
+--- a/frmts/pdf/CMakeLists.txt
++++ b/frmts/pdf/CMakeLists.txt
+@@ -67,19 +67,5 @@ endif ()
+ if (GDAL_USE_PDFIUM)
+   target_compile_definitions(gdal_PDF PRIVATE -DHAVE_PDFIUM)
+   gdal_target_link_libraries(gdal_PDF PRIVATE PDFIUM::PDFIUM)
+-  if (UNIX)
+-    find_library(LCMS2_LIBRARY NAMES lcms2)
+ 
+-    # Rather hacky... Related how we build pdfium in https://github.com/rouault/pdfium_build_gdal_3_4
+-    gdal_target_link_libraries(
+-      gdal_PDF
+-      PRIVATE
+-      JPEG::JPEG
+-      PNG::PNG
+-      ${OPENJPEG_LIBRARIES}
+-      Threads::Threads
+-      ${LCMS2_LIBRARY})
+-  else ()
+-      gdal_target_link_libraries(gdal_PDF PRIVATE winmm.lib)
+-  endif ()
+ endif ()
+diff --git a/gdal.cmake b/gdal.cmake
+index 3dc0c63483..03c717bc87 100644
+--- a/gdal.cmake
++++ b/gdal.cmake
+@@ -590,8 +590,7 @@ add_subdirectory(scripts)
+ get_property(GDAL_PRIVATE_LINK_LIBRARIES GLOBAL PROPERTY gdal_private_link_libraries)
+ # GDAL_EXTRA_LINK_LIBRARIES may be set by the user if the various FindXXXX modules
+ # didn't capture all required dependencies (used for example by OSGeo4W)
+-target_link_libraries(${GDAL_LIB_TARGET_NAME} PRIVATE ${GDAL_PRIVATE_LINK_LIBRARIES} ${GDAL_EXTRA_LINK_LIBRARIES})
+-
++target_link_libraries(${GDAL_LIB_TARGET_NAME} PRIVATE ${GDAL_PRIVATE_LINK_LIBRARIES} ${GDAL_EXTRA_LINK_LIBRARIES} "-framework CoreFoundation" "-framework CoreGraphics")
+ # Document/Manuals
+ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/doc" AND BUILD_DOCS)
+   add_subdirectory(doc)
