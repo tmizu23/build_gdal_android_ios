@@ -15,7 +15,7 @@ tar xzf proj-9.0.0.tar.gz
 
 #pdfium
 # 別途ビルドして、installディレクトリのパスを指定
-https://github.com/tmizu23/pdfium_build_gdal_3_8/blob/android_ios/build_ios.sh
+# https://github.com/tmizu23/pdfium_build_gdal_3_8/blob/android_ios/build_ios.sh
 
 PDFium_DIR=/Users/mizutani/prg/pdfium_build_gdal_3_8/install
 

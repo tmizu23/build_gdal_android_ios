@@ -6,12 +6,8 @@ set -e
 # you need execute it manually with sudo on wsl2
 
 # apt-get update -y
-
-# pkg-config sqlite3 for proj compilation
-# DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
-#     wget unzip ccache curl ca-certificates \
-#     pkg-config make binutils sqlite3 swig openjdk-17-jdk ant \
-#     automake
+# apt-get install -y --no-install-recommends wget unzip ccache curl ca-certificates \
+#     pkg-config make binutils sqlite3 swig openjdk-17-jdk ant automake
 ####################################
 
 export WORK_DIR=$PWD/work
