@@ -1,0 +1,24 @@
+diff --git a/frmts/pdf/CMakeLists.txt b/frmts/pdf/CMakeLists.txt
+index 9b9a1898a7..3333344df2 100644
+--- a/frmts/pdf/CMakeLists.txt
++++ b/frmts/pdf/CMakeLists.txt
+@@ -67,19 +67,5 @@ endif ()
+ if (GDAL_USE_PDFIUM)
+   target_compile_definitions(gdal_PDF PRIVATE -DHAVE_PDFIUM)
+   gdal_target_link_libraries(gdal_PDF PRIVATE PDFIUM::PDFIUM)
+-  if (UNIX)
+-    find_library(LCMS2_LIBRARY NAMES lcms2)
+ 
+-    # Rather hacky... Related how we build pdfium in https://github.com/rouault/pdfium_build_gdal_3_4
+-    gdal_target_link_libraries(
+-      gdal_PDF
+-      PRIVATE
+-      JPEG::JPEG
+-      PNG::PNG
+-      ${OPENJPEG_LIBRARIES}
+-      Threads::Threads
+-      ${LCMS2_LIBRARY})
+-  else ()
+-      gdal_target_link_libraries(gdal_PDF PRIVATE winmm.lib)
+-  endif ()
+ endif ()

@@ -5,12 +5,12 @@ cd $WORK_DIR
 # gdal
 # for build gdal 3.8 with pdfium,
 # commit e0db75a9034891a24e5fb2d0fbc83fbbc8cde7ed
-# git clone https://github.com/OSGeo/gdal.git
+git clone https://github.com/OSGeo/gdal.git
 
-# PATCH="$PWD/build_ios.patch"
-# cd $WORK_DIR/gdal
-# git checkout e0db75a9034891a24e5fb2d0fbc83fbbc8cde7ed
-# git apply $PATCH
+PATCH="$PWD/build_ios.patch"
+cd $WORK_DIR/gdal
+git checkout e0db75a9034891a24e5fb2d0fbc83fbbc8cde7ed
+git apply $PATCH
 
 
 CMTOOLCHAIN=$WORK_DIR/ios-cmake/ios.toolchain.cmake
