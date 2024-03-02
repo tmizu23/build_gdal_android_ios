@@ -7,15 +7,16 @@ export PATH=$WORK_DIR/cmake-3.28.3-linux-x86_64/bin:$PATH
 export ANDROID_NDK=$WORK_DIR/android-ndk-r26b
 export NDK_TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
 
+PATCH="$PWD/build_android.patch"
 
+cd $WORK_DIR
 # gdal
 # for build gdal 3.8 with pdfium,
 # commit e0db75a9034891a24e5fb2d0fbc83fbbc8cde7ed
 git clone https://github.com/OSGeo/gdal.git
 
-git checkout e0db75a9034891a24e5fb2d0fbc83fbbc8cde7ed
 cd $WORK_DIR/gdal
-PATCH="$PWD/build_android.patch"
+git checkout e0db75a9034891a24e5fb2d0fbc83fbbc8cde7ed
 git apply $PATCH
 
 if test -f "$WORK_DIR/ccache.tar.gz"; then
@@ -30,13 +31,14 @@ ccache -s
 # Build GDAL
 PREFIX=$WORK_DIR/install/android_arm64
 GDAL_BUILD_DIR="$WORK_DIR/gdal/build_arm64"
-mkdir $GDAL_BUILD_DIR
+
+mkdir -p $GDAL_BUILD_DIR
 cd $GDAL_BUILD_DIR
 
 # PKG_CONFIG_LIBDIR, CMAKE_FIND_ROOT_PATH_MODE_INCLUDE, CMAKE_FIND_ROOT_PATH_MODE_LIBRARY, CMAKE_FIND_USE_CMAKE_SYSTEM_PATH
 # are needed because we don't install dependencies (PROJ, SQLite3) in the NDK sysroot
 # This is definitely not the most idiomatic way of proceeding...
-PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig cmake .. \
+PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig cmake --fresh .. \
  -DUSE_CCACHE=ON \
  -DCMAKE_INSTALL_PREFIX=$PREFIX \
  -DCMAKE_SYSTEM_NAME=Android \
@@ -56,6 +58,11 @@ PKG_CONFIG_LIBDIR=$PREFIX/lib/pkgconfig cmake .. \
  -DBUILD_APPS=OFF \
  -DBUILD_PYTHON_BINDINGS=OFF \
  -DBUILD_TESTING=OFF \
+ -DGDAL_BUILD_OPTIONAL_DRIVERS=OFF \
+ -DOGR_BUILD_OPTIONAL_DRIVERS=OFF \
+ -DGDAL_USE_EXTERNAL_LIBS=OFF \
+ -DGDAL_USE_ZLIB=OFF \
+ -DGDAL_USE_LIBKML=OFF \
  -DGDAL_USE_PDFIUM=ON 
 
 make -j$(nproc)

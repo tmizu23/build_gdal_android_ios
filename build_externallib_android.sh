@@ -73,12 +73,6 @@ make -j$(nproc)
 make install
 cd ../../..
 
-ccache -s
-
-echo "Saving ccache..."
-rm -f "$WORK_DIR/ccache.tar.gz"
-(cd $HOME && tar czf "$WORK_DIR/ccache.tar.gz" .ccache)
-
 #Pdfium
 # 別途ビルドして、installディレクトリのパスを指定
 # https://github.com/tmizu23/pdfium_build_gdal_3_8/blob/android_ios/build_android.sh
@@ -87,4 +81,11 @@ PDFium_DIR=$WORK_DIR/../../pdfium_build_gdal_3_8/install
 
 cp $PDFium_DIR/arm64/lib/libpdfium.a $PREFIX/lib/libpdfium.a
 cp -r $PDFium_DIR/arm64/include/pdfium $PREFIX/include/pdfium
+
+ccache -s
+
+echo "Saving ccache..."
+rm -f "$WORK_DIR/ccache.tar.gz"
+(cd $HOME && tar czf "$WORK_DIR/ccache.tar.gz" .ccache)
+
 

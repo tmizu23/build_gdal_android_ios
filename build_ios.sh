@@ -1,5 +1,7 @@
 #!/bin/sh
 WORK_DIR=$PWD/work
+PATCH="$PWD/build_ios.patch"
+
 cd $WORK_DIR
 
 # gdal
@@ -7,7 +9,7 @@ cd $WORK_DIR
 # commit e0db75a9034891a24e5fb2d0fbc83fbbc8cde7ed
 git clone https://github.com/OSGeo/gdal.git
 
-PATCH="$PWD/build_ios.patch"
+
 cd $WORK_DIR/gdal
 git checkout e0db75a9034891a24e5fb2d0fbc83fbbc8cde7ed
 git apply $PATCH
