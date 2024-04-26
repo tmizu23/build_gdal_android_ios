@@ -21,7 +21,7 @@ PDFium_DIR=/Users/mizutani/prg/pdfium_build_gdal_3_8/install
 
 CMTOOLCHAIN=$WORK_DIR/ios-cmake/ios.toolchain.cmake
 
-CONFIGURATIONS="iphoneos_arm64 iphonesimulator_arm64"
+CONFIGURATIONS="iphoneos_arm64 iphonesimulator_arm64 iphonesimulator_x86_64"
 for CONFIG in $CONFIGURATIONS; do
     echo "#############################"
     echo "CONFIG: $CONFIG"
@@ -35,6 +35,11 @@ for CONFIG in $CONFIGURATIONS; do
         PREFIX="$WORK_DIR/install/$CONFIG"
         SDKPATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
         OS="SIMULATORARM64"
+        PDFium_PALTFORM="simulator"
+    elif [ "$CONFIG" = "iphonesimulator_x86_64" ]; then
+        PREFIX="$WORK_DIR/install/$CONFIG"
+        SDKPATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+        OS="SIMULATOR64"
         PDFium_PALTFORM="simulator"
     fi
 

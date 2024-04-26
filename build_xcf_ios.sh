@@ -8,13 +8,13 @@ rm -rf xcf_temp
 mkdir -p xcf_temp/iphoneos/lib xcf_temp/iphonesimulator/lib
 
 lipo -create -output xcf_temp/iphoneos/lib/libsqlite3.a install/iphoneos_arm64/lib/libsqlite3.a
-lipo -create -output xcf_temp/iphonesimulator/lib/libsqlite3.a install/iphonesimulator_arm64/lib/libsqlite3.a
+lipo -create -output xcf_temp/iphonesimulator/lib/libsqlite3.a install/iphonesimulator_arm64/lib/libsqlite3.a install/iphonesimulator_x86_64/lib/libsqlite3.a
 lipo -create -output xcf_temp/iphoneos/lib/libproj.a install/iphoneos_arm64/lib/libproj.a
-lipo -create -output xcf_temp/iphonesimulator/lib/libproj.a install/iphonesimulator_arm64/lib/libproj.a
+lipo -create -output xcf_temp/iphonesimulator/lib/libproj.a install/iphonesimulator_arm64/lib/libproj.a install/iphonesimulator_x86_64/lib/libproj.a
 lipo -create -output xcf_temp/iphoneos/lib/libgdal.a install/iphoneos_arm64/lib/libgdal.a
-lipo -create -output xcf_temp/iphonesimulator/lib/libgdal.a install/iphonesimulator_arm64/lib/libgdal.a
+lipo -create -output xcf_temp/iphonesimulator/lib/libgdal.a install/iphonesimulator_arm64/lib/libgdal.a install/iphonesimulator_x86_64/lib/libgdal.a
 lipo -create -output xcf_temp/iphoneos/lib/libpdfium.a install/iphoneos_arm64/lib/libpdfium.a
-lipo -create -output xcf_temp/iphonesimulator/lib/libpdfium.a install/iphonesimulator_arm64/lib/libpdfium.a
+lipo -create -output xcf_temp/iphonesimulator/lib/libpdfium.a install/iphonesimulator_arm64/lib/libpdfium.a install/iphonesimulator_x86_64/lib/libpdfium.a
 
 mkdir -p xcf_temp/include_sqlite3 xcf_temp/include_proj xcf_temp/include_gdal xcf_temp/include_pdfium
 cp -r install/iphoneos_arm64/include/* xcf_temp/include_gdal/
