@@ -96,7 +96,12 @@ s.vendored_frameworks = "ios/Frameworks/gdal.xcframework", "ios/Frameworks/proj.
 ```  
 
 - firebaseと共存させるには、利用するプロジェクトのPodfileのstatic_frameworkに'react-native-gdalwarp'を追加する。
-
+- RCT_NEW_ARCH_ENABLEDの時にビルドエラーにならないようにGdalwarp.hを以下のように修正
+  ```
+  #import <React/RCTBridgeModule.h>
+  @interface Gdalwarp : NSObject <RCTBridgeModule>
+  @end
+  ```
 
 ## 参考
 * https://github.com/paulocoutinhox/pdfium-lib
