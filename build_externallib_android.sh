@@ -37,6 +37,12 @@ export ANDROID_NDK=$WORK_DIR/android-ndk-r26b
 export NDK_TOOLCHAIN=$ANDROID_NDK/toolchains/llvm/prebuilt/linux-x86_64
 PREFIX=$WORK_DIR/install/android_arm64
 
+# 16KB page-size support (Android):
+# - Ensure shared objects are link-aligned for 16KB page systems
+# - Set SQLite default page size to 16KB (and raise max-default accordingly)
+COMMON_CFLAGS="-O2 -fPIC -D_FILE_OFFSET_BITS=64 -DSQLITE_DEFAULT_PAGE_SIZE=16384 -DSQLITE_MAX_DEFAULT_PAGE_SIZE=16384"
+COMMON_LDFLAGS="-Wl,-z,max-page-size=16384"
+
 ccache -M 1G
 ccache -s
 
@@ -44,7 +50,9 @@ ccache -s
 wget -q https://sqlite.org/2022/sqlite-autoconf-3370200.tar.gz
 tar xzf sqlite-autoconf-3370200.tar.gz
 cd sqlite-autoconf-3370200
-CC="ccache $NDK_TOOLCHAIN/bin/aarch64-linux-android24-clang" ./configure \
+CC="ccache $NDK_TOOLCHAIN/bin/aarch64-linux-android24-clang" \
+CFLAGS="$COMMON_CFLAGS" LDFLAGS="$COMMON_LDFLAGS" \
+./configure \
   --prefix=$PREFIX --host=aarch64-linux-android24
 make -j$(nproc)
 make install
@@ -68,16 +76,15 @@ cmake .. \
   "-DCMAKE_PREFIX_PATH=$PREFIX;$NDK_TOOLCHAIN/sysroot/usr/" \
   -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=NEVER \
   -DCMAKE_FIND_ROOT_PATH_MODE_LIBRARY=NEVER \
-  -DEXE_SQLITE3=/usr/bin/sqlite3
+  -DEXE_SQLITE3=/usr/bin/sqlite3 \
+  -DCMAKE_C_FLAGS="$COMMON_CFLAGS" \
+  -DCMAKE_CXX_FLAGS="$COMMON_CFLAGS" \
+  -DCMAKE_SHARED_LINKER_FLAGS="$COMMON_LDFLAGS" \
+  -DCMAKE_MODULE_LINKER_FLAGS="$COMMON_LDFLAGS" \
+  -DCMAKE_EXE_LINKER_FLAGS="$COMMON_LDFLAGS"
 make -j$(nproc)
 make install
 cd ../../..
-
-ccache -s
-
-echo "Saving ccache..."
-rm -f "$WORK_DIR/ccache.tar.gz"
-(cd $HOME && tar czf "$WORK_DIR/ccache.tar.gz" .ccache)
 
 #Pdfium
 # 別途ビルドして、installディレクトリのパスを指定
@@ -87,4 +94,11 @@ PDFium_DIR=$WORK_DIR/../../pdfium_build_gdal_3_8/install
 
 cp $PDFium_DIR/arm64/lib/libpdfium.a $PREFIX/lib/libpdfium.a
 cp -r $PDFium_DIR/arm64/include/pdfium $PREFIX/include/pdfium
+
+ccache -s
+
+echo "Saving ccache..."
+rm -f "$WORK_DIR/ccache.tar.gz"
+(cd $HOME && tar czf "$WORK_DIR/ccache.tar.gz" .ccache)
+
 
