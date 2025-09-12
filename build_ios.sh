@@ -17,7 +17,7 @@ git apply $PATCH
 
 CMTOOLCHAIN=$WORK_DIR/ios-cmake/ios.toolchain.cmake
 
-CONFIGURATIONS="iphoneos_arm64 iphonesimulator_arm64"
+CONFIGURATIONS="iphoneos_arm64 iphonesimulator_arm64 iphonesimulator_x86_64"
 for CONFIG in $CONFIGURATIONS; do
     echo "#############################"
     echo "CONFIG: $CONFIG"
@@ -32,6 +32,12 @@ for CONFIG in $CONFIGURATIONS; do
         SDKPATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
         OS="SIMULATORARM64"
         GDAL_BUILD_DIR="$WORK_DIR/gdal/build_${CONFIG}"
+    elif [ "$CONFIG" = "iphonesimulator_x86_64" ]; then
+        PREFIX="$WORK_DIR/install/$CONFIG"
+        SDKPATH=$(xcrun --sdk iphonesimulator --show-sdk-path)
+        OS="SIMULATOR64"
+        GDAL_BUILD_DIR="$WORK_DIR/gdal/build_${CONFIG}"
+    
     fi
 
     rm -rf $GDAL_BUILD_DIR
@@ -59,6 +65,8 @@ for CONFIG in $CONFIGURATIONS; do
         -DGDAL_USE_EXTERNAL_LIBS=OFF \
         -DGDAL_USE_ZLIB=OFF \
         -DGDAL_USE_LIBKML=OFF \
+        -DGDAL_ENABLE_DRIVER_PNG=ON \
+        -DGDAL_USE_PNG_INTERNAL=ON \
         -DGDAL_ENABLE_DRIVER_PDF=ON \
         -DGDAL_USE_PDFIUM=ON \
         -DPDFIUM_INCLUDE_DIR=$PREFIX/include/pdfium \
